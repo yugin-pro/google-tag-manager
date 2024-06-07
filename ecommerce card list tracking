@@ -3,37 +3,37 @@ Using Intersection Observer API for e-commerce tracking via GTM
 https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
 */
 
+let listInfo = getListInformation()
 const intersectionCallback = (entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
       if (entry.intersectionRatio >= 0.75) {
-        let itemValue =      entry.target.getElementsByClassName('card-text')[0].getInnerHTML()
         dataLayer.push({ ecommerce: null });  
         dataLayer.push({
           event: "view_item_list",
           ecommerce: {
-            item_list_id: itemValue,
-            item_list_name: itemValue,
+            item_list_id: listInfo.item_list_id,
+            item_list_name: listInfo.item_list_name,
             items: [
              {
-              item_id: "SKU_" + Math.floor(Math.random() * 5 + 1),
-              item_name: itemValue,
-              affiliation: "Google Merchandise Store",
-              coupon: "SUMMER_FUN",
-              discount: Math.floor(Math.random() * 5 + 1),
-              index: Math.floor(Math.random() * 8 + 1),
-              item_brand: "brand_"+ Math.floor(Math.random() * 5 + 1),
-              item_category: "category"+ Math.floor(Math.random() * 5 + 1),
-              item_category2: "category2_"+ Math.floor(Math.random() * 5 + 1),
-              item_category3: "category3_"+ Math.floor(Math.random() * 5 + 1),
-              item_category4: "category4_"+ Math.floor(Math.random() * 5 + 1),
-              item_category5: "category5_"+ Math.floor(Math.random() * 5 + 1),
-              item_list_id: itemValue,
-              item_list_name: itemValue,
-              item_variant: "variant_"+Math.floor(Math.random() * 5 + 1),
+              item_id: getProductInfo(entry.target).item_id,
+              item_name: getProductInfo(entry.target).item_name,
+              affiliation: getProductInfo(entry.target).affiliation,
+              coupon: getProductInfo(entry.target).coupon,
+              discount: getProductInfo(entry.target).discount,
+              index: getProductInfo(entry.target).index,
+              item_brand: getProductInfo(entry.target).item_brand,
+              item_category: listInfo.item_category,
+              item_category2: listInfo.item_category2,
+              item_category3: listInfo.item_category3,
+              item_category4: listInfo.item_category4,
+              item_category5: listInfo.item_category5,
+              item_list_id: listInfo.item_list_id,
+              item_list_name: listInfo.item_list_name,
+              item_variant: getProductInfo(entry.target).item_variant,
               location_id: "ChIJIQBpAG2ahYAR_6128GcTUEo",
-              price: Math.floor(Math.random() * 50 + 1),
-              quantity: Math.floor(Math.random() * 5 + 1)         
+              price: getProductInfo(entry.target).price,
+              quantity: getProductInfo(entry.target).quantity         
             }]
           }
         });
@@ -49,6 +49,40 @@ const productObserver  =  new IntersectionObserver(intersectionCallback,{
   threshold: 1,
 });
 
+let cardCollection = document.getElementsByClassName('card shadow-sm')
+for (let item of cardCollection) {
+    productObserver.observe(item)
+}
+
+function getListInformation() {
+	return {
+    	item_list_id: 1,
+      	item_list_name: 'default list',
+       item_category: "category"+ Math.floor(Math.random() * 5 + 1),
+  item_category2: "category2_"+ Math.floor(Math.random() * 5 + 1),
+  item_category3: "category3_"+ Math.floor(Math.random() * 5 + 1),
+  item_category4: "category4_"+ Math.floor(Math.random() * 5 + 1),
+  item_category5: "category5_"+ Math.floor(Math.random() * 5 + 1),
+    }
+}
+
+function getProductInfo(target) {
+    let itemValue = target.getElementsByClassName('card-text')[0].getInnerHTML()
+          
+	return {
+        item_id: "SKU_" + itemValue.length,
+        item_name: itemValue,
+        affiliation: "Google Merchandise Store",
+        coupon: "SUMMER_FUN",
+        discount: Math.floor(Math.random() * 5 + 1),
+        index: Math.floor(Math.random() * 5 + 1),
+        item_brand: 'Any Brand',
+        item_variant: 'Any variant',
+        location_id: "ChIJIQBpAG2ahYAR_6128GcTUEo",
+        price:  itemValue.length,
+        quantity: Math.floor(Math.random() * 5 + 1)   
+    }
+}
 let cardCollection = document.getElementsByClassName('card shadow-sm')
 for (let item of cardCollection) {
     productObserver.observe(item)
