@@ -72,5 +72,5 @@ const cartObserverCallback = (mutationList, observer) => {
     }
   }
 };
-const carObserver = new MutationObserver(cartObserverCallback);
-carObserver.observe(cartContainer, cartObserverConfig);
+const cartObserver = new MutationObserver(cartObserverCallback);
+cartObserver.observe(cartContainer, cartObserverConfig);
