@@ -3,8 +3,8 @@ Doc https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
 */
 
 const cartContainer = document.getElementById('ticketList')
-const config = { attributes: false, childList: true, subtree: false };
-const callback = (mutationList, observer) => {
+const cartObserverConfig = { attributes: false, childList: true, subtree: false };
+const cartObserverCallback = (mutationList, observer) => {
   for (const mutation of mutationList) {
     if (mutation.type === "childList" && mutation.addedNodes.length) {
       dataLayer.push({ ecommerce: null });  // Clear the previous ecommerce object.
@@ -72,6 +72,5 @@ const callback = (mutationList, observer) => {
     }
   }
 };
-const observer = new MutationObserver(callback);
-observer.observe(cartContainer, config);
-observer.disconnect();
+const carObserver = new MutationObserver(cartObserverCallback);
+carObserver.observe(cartContainer, cartObserverConfig);
